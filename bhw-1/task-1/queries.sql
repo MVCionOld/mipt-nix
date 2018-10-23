@@ -71,4 +71,28 @@ begin
 end;
 $$ language plpgsql;
 
+create or replace function is_square_matrix(id_matrix int) returns boolean as
+$$
+declare
+  wid int;
+  heig int;
+begin
+  select height, width into heig, wid from matrix_info where matrix_id = id_matrix;
+  return heig = wid;
+end;
+$$ language plpgsql;
 
+create or replace function is_vector(id_matrix int) returns boolean as
+$$
+declare
+  wid int;
+  heig int;
+begin
+  select height, width into heig, wid from matrix_info where matrix_id = id_matrix;
+  return wid = 1;
+end;
+$$ language plpgsql;
+
+select is_square_matrix(2);
+select is_vector(2);
+select show_matrix(2, 0.0);
