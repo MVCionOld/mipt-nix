@@ -49,3 +49,26 @@ begin
 
 end;
 $row_to_return$ language plpgsql;
+
+
+drop function show_matrix(integer, double precision);
+create or replace function show_matrix(id_matrix int, default_value float) returns table (row_id int, row_values float[])  as
+$$
+DECLARE
+  i int := 0;
+  row_count int;
+  row_massive float[];
+begin
+  select get_height(id_matrix) - 1 into row_count;
+
+  for i in 0..row_count
+  loop
+    select get_row(id_matrix, i, default_value) into row_massive;
+    row_id := i;
+    row_values := row_massive;
+    return next;
+  end loop;
+end;
+$$ language plpgsql;
+
+
