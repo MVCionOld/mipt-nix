@@ -80,21 +80,6 @@ select
 
 
 /* #11 */
-select
-  A.column_no
-  , A.row_no
-  , A.element_val + B.element_val as result
-from
-  MATRIX_DATA A
-join
-  MATRIX_DATA B
-  on
-    A.matrix_id=$1
-    and B.matrix_id=$2
-where 1=1
-  and A.row_no=B.row_no
-  and A.column_no=B.column_no
-  and (
     select
       case
         when
@@ -102,11 +87,23 @@ where 1=1
             = (select max(row_no) from matrix_data where matrix_id = $2)
           and (select max(column_no) from matrix_data where matrix_id = $1)
               = (select max(column_no) from matrix_data where matrix_id = $2)
-          then true
+          then (select
+                  A.column_no
+                  , A.row_no
+                  , A.element_val + B.element_val as result
+                from
+                  MATRIX_DATA A
+                join
+                  MATRIX_DATA B
+                  on
+                    A.matrix_id=$1
+                    and B.matrix_id=$2
+                where 1=1
+                  and A.row_no=B.row_no
+                  and A.column_no=B.column_no)
         else
-           false
-      end
-  );
+           'IMPOSSIBLE'
+      end;
 
 
 /* 12 */
@@ -123,3 +120,30 @@ from matrix_data as matr1, matrix_data as matr2 where matr1.matrix_id = $1 and m
 
 /* 13 */
 
+
+
+/* 15 */
+    select
+      case
+        when
+          (select max(row_no) from matrix_data where matrix_id = $1)
+            = (select max(row_no) from matrix_data where matrix_id = $2)
+          and (select max(column_no) from matrix_data where matrix_id = $1)
+              = (select max(column_no) from matrix_data where matrix_id = $2)
+          then (select
+                  A.column_no
+                  , A.row_no
+                  , A.element_val - B.element_val as result
+                from
+                  MATRIX_DATA A
+                join
+                  MATRIX_DATA B
+                  on
+                    A.matrix_id=$1
+                    and B.matrix_id=$2
+                where 1=1
+                  and A.row_no=B.row_no
+                  and A.column_no=B.column_no)
+        else
+           'IMPOSSIBLE'
+      end;
