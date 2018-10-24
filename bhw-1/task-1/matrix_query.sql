@@ -119,7 +119,30 @@ from matrix_data as matr1, matrix_data as matr2 where matr1.matrix_id = $1 and m
 
 
 /* 13 */
+/* 13 */
 
+/*
+select
+  case
+  when
+    (select max(matr1.column_no) <> max(matr2.row_no) from matrix_data as matr1, matrix_data as matr2 where matr1.matrix_id = $1 and matr2.matrix_id = $2)
+  then
+    'cannot be multiplied matrices'
+  else
+    (select matr1.row_no, matr2.column_no,
+       (select sum(el1 * el2) from (select matr11.element_val as el1, matr22.element_val as el2 from matrix_data as matr11, matrix_data as matr22
+        where matr11.matrix_id = matr1.matrix_id and matr22.matrix_id = matr1.matrix_id and matr11.row_no = matr1.row_no and matr22.column_no = matr2.column_no
+       ) as cros ) as value
+    from matrix_data as matr1, matrix_data as matr2
+    where matr1.matrix_id = $1 and matr2.matrix_id = $2 and matr1.column_no = 0 and matr2.row_no = 0)
+  end as answer;
+  */
+select matr1.row_no, matr2.column_no,
+       (select sum(el1 * el2) from (select matr11.element_val as el1, matr22.element_val as el2 from matrix_data as matr11, matrix_data as matr22
+        where matr11.matrix_id = matr1.matrix_id and matr22.matrix_id = matr2.matrix_id and matr11.row_no = matr1.row_no and matr22.column_no = matr2.column_no
+         and matr11.column_no = matr22.row_no
+       ) as cros ) as value from matrix_data as matr1, matrix_data as matr2
+    where matr1.matrix_id = $1 and matr2.matrix_id = $2 and matr1.column_no = 0 and matr2.row_no = 0;
 
 
 /* 15 */
