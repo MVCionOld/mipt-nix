@@ -171,8 +171,8 @@ where
                 join
                   MATRIX_DATA B
                   on
-                    A.matrix_id=$1
-                    and B.matrix_id=$2
+                    A.matrix_id=:matrix_id1
+                    and B.matrix_id=:matrix_id2
                 where 1=1
                   and A.row_no=B.row_no
                   and A.column_no=B.column_no)
