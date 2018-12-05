@@ -57,7 +57,7 @@ create table if not exists subscriptions (
 );
 create table if not exists parking_data (
   ID               int primary key,
-  ParkingNo        int,
+  ParkingNo        int references parking(ParkingNo),
   DateTime_of_scan timestamp,
   RegNo            varchar(10)
 );
