@@ -17,7 +17,7 @@ create table if not exists areas (
 create table if not exists parking (
   ParkingNo int primary key,
   Address   varchar(50),
-  AreaID    int,
+  AreaID    int references areas(AreaID),
   Num       int
 );
 create table if not exists clients (
@@ -37,21 +37,21 @@ create table if not exists tariffs (
   CostPerMonth float
 );
 create table if not exists tariff_data (
-  TariffID int,
-  AreaID   int,
+  TariffID int references tariffs(TariffID),
+  AreaID   int references areas(AreaID),
   primary key (TariffID, AreaID)
 );
 create table if not exists docs (
   DocID       int primary key,
   Date_of_doc timestamp,
-  ClientID    int,
+  ClientID    int references clients(ClientID),
   Total       float
 );
 create table if not exists subscriptions (
   SubscrID      int primary key,
-  DocID         int,
-  CarID         int,
-  TariffID      int,
+  DocID         int references docs(DocID),
+  CarID         int references cars(CarID),
+  TariffID      int references tariffs(TariffID),
   ValidityMonth date,
   Cost          float
 );
@@ -61,3 +61,4 @@ create table if not exists parking_data (
   DateTime_of_scan timestamp,
   RegNo            varchar(10)
 );
+
