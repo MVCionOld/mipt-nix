@@ -61,4 +61,3 @@ create table if not exists parking_data (
   DateTime_of_scan timestamp,
   RegNo            varchar(10)
 );
-
