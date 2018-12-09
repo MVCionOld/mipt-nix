@@ -14,10 +14,8 @@ inner join parking as p
   on p.parkingno = d.parkingno
 inner join subscriptions as ss
   on ss.carid = c.carid
-inner join tariffs as t
-  on t.tariffid = ss.tariffid
 inner join tariff_data as td
-  on td.tariffid = t.tariffid and td.areaid = p.areaid
+  on td.tariffid = ss.tariffid and td.areaid = p.areaid
 where date_part('month', datetime_of_scan) = date_part('month', date(:data)) and
   date_part('year', datetime_of_scan) = date_part('year', date(:data)) and
   date_part('day', datetime_of_scan) = date_part('day', date(:data))
